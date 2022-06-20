@@ -14,11 +14,26 @@ This is the code from Peri
 #include <OSCBundle.h>
 #include <OSCData.h>
 
+#include <ping.h>
+int cmSmooth = 0;
+int MeasurementsToAverage = 16;
+int period = 300;
+unsigned long time_now = 0;
+static Ping_Data pingA;
+int trigPin2 = D7;    // Trigger
+int echoPin2 = D8;    // Echo
+int relay1 = D1;    // Lamp
+int relay2 = D2;    // LED
+int relay3 = D3;    // Yellow
+int relay4 = D4;    // None
+long duration1, cmSmooth1, duration2, cmSmooth2;
+//-----------------------------------------
 char ssid[] = "flux1";          // your network SSID (name)
 char pass[] = "fluxdaemon";                    // your network password
 
 // A UDP instance to let us send and receive packets over UDP
 WiFiUDP Udp;
+const IPAddress inIp(172,20,10,10);        // remote IP (not needed for receive)
 const IPAddress outIp(172,20,10,2);        // remote IP (not needed for receive)
 const unsigned int outPort = 9999;          // remote port (not needed for receive)
 const unsigned int localPort = 8888;        // local port to listen for UDP packets (here's where we send the packets)
@@ -40,6 +55,19 @@ void setup() {
   digitalWrite(BUILTIN_LED, ledState);    // turn *on* led
 
   Serial.begin(115200);
+  //-----------------------------------------
+  int triggerPin = D5;
+  int echoPin = D6;
+  ping_init(&pingA, triggerPin, echoPin, PING_MM); // set the trigger and echo pin to the same number for one-pin mode
+  pinMode(relay1, OUTPUT);
+  pinMode(relay2, OUTPUT);
+  pinMode(relay3, OUTPUT);
+  pinMode(relay4, OUTPUT);
+  
+
+      // Specify a static IP address for NodeMCU - only needeed for receiving messages)
+    // If you erase this line, your ESP8266 will get a dynamic IP address
+    WiFi.config(IPAddress(inIp),IPAddress(192,168,0,1), IPAddress(255,255,255,0)); 
 
   // Connect to WiFi network
   Serial.println();
