@@ -15,8 +15,8 @@
 #include <OSCBundle.h>
 #include <OSCData.h>
 
-int trigPin[] = {27,25};
-int echoPin[] = {26,33};
+int trigPin[] = {27,18};
+int echoPin[] = {26,19};
 
 int duration[2];
 int distance[2];
@@ -35,10 +35,10 @@ unsigned int ledState = LOW;              // LOW means led is *on*
 
 void setup() {
   Serial.begin(115200);
-  
-  pinMode(trigPin[0], OUTPUT); 
-  pinMode(echoPin[0], INPUT);
-  
+  for (int m = 0; m<2; m++) {
+  pinMode(trigPin[m], OUTPUT); 
+  pinMode(echoPin[m], INPUT);
+  }
   // Connect to WiFi network
   Serial.println();
   Serial.println();
@@ -133,8 +133,7 @@ void sendOSC(int m, char *n){
 }
 
 void sensorRead() {
-  int time = millis();
-  for (int m=0; m<2; m++) {
+  for (int m = 0; m<2; m++){
   digitalWrite(trigPin[m], LOW); 
   delayMicroseconds(2);
   digitalWrite(trigPin[m], HIGH); 
@@ -143,8 +142,6 @@ void sensorRead() {
   
   duration[m] = pulseIn(echoPin[m], HIGH);
   distance[m]= duration[m]*0.034/2;
-  Serial.println(millis()-time);        
-  
   }
 Serial.print(distance[0]);
 Serial.print("---");
