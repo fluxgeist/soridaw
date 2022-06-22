@@ -22,6 +22,8 @@ int pirStatus = 0;                 // variable to store the pirPin status (pirSt
 int trigPin[] = {27,18};
 int echoPin[] = {26,19};
 
+int relayPin[] = {5,17,16,4};
+
 int duration[2];
 int distance[2];
 char ssid[] = "flux1";          // your network SSID (name)
@@ -45,6 +47,11 @@ void setup() {
   }
 
   pinMode(pirPin, INPUT);    // initialize pirPin as an input
+  
+  pinMode(relayPin[0],OUTPUT);
+  pinMode(relayPin[1],OUTPUT);
+  pinMode(relayPin[2],OUTPUT);
+  pinMode(relayPin[3],OUTPUT);
   
   // Connect to WiFi network
   Serial.println();
@@ -91,9 +98,11 @@ void toggleOnOff1(OSCMessage &msg, int addrOffset){
 //  digitalWrite(boardLed, (ledState + 1) % 2);   // Onboard LED works the wrong direction (1 = 0 bzw. 0 = 1)
   if (ledState) {
     Serial.println("LED 1 on");
+    digitalWrite(relayPin[0],HIGH);
   }
   else {
     Serial.println("LED 1 off");
+    digitalWrite(relayPin[0],LOW);
   }
   ledState = !ledState;                         // toggle the state from HIGH to LOW to HIGH to LOW ...
 }
@@ -102,9 +111,11 @@ void toggleOnOff2(OSCMessage &msg, int addrOffset){
 //  digitalWrite(boardLed, (ledState + 1) % 2);   // Onboard LED works the wrong direction (1 = 0 bzw. 0 = 1)
   if (ledState) {
     Serial.println("LED 2 on");
+    digitalWrite(relayPin[1],HIGH);
   }
   else {
     Serial.println("LED 2 off");
+    digitalWrite(relayPin[1],LOW);
   }
   ledState = !ledState;                         // toggle the state from HIGH to LOW to HIGH to LOW ...
 }
@@ -113,9 +124,11 @@ void toggleOnOff3(OSCMessage &msg, int addrOffset){
 //  digitalWrite(boardLed, (ledState + 1) % 2);   // Onboard LED works the wrong direction (1 = 0 bzw. 0 = 1)
   if (ledState) {
     Serial.println("LED 3 on");
+    digitalWrite(relayPin[2],HIGH);
   }
   else {
     Serial.println("LED 3 off");
+    digitalWrite(relayPin[2],LOW);
   }
   ledState = !ledState;                         // toggle the state from HIGH to LOW to HIGH to LOW ...
 }
@@ -124,9 +137,11 @@ void toggleOnOff4(OSCMessage &msg, int addrOffset){
 //  digitalWrite(boardLed, (ledState + 1) % 2);   // Onboard LED works the wrong direction (1 = 0 bzw. 0 = 1)
   if (ledState) {
     Serial.println("LED 4 on");
+    digitalWrite(relayPin[3],HIGH);
   }
   else {
     Serial.println("LED 4 off");
+    digitalWrite(relayPin[3],LOW);
   }
   ledState = !ledState;                         // toggle the state from HIGH to LOW to HIGH to LOW ...
 }
