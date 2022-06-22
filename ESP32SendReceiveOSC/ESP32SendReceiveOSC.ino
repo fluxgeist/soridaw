@@ -15,6 +15,10 @@
 #include <OSCBundle.h>
 #include <OSCData.h>
 
+int pirPin = 35;              // the pin that the pirPin is atteched to
+int presence = LOW;             // by default, no motion detected
+int pirStatus = 0;                 // variable to store the pirPin status (pirStatusue)
+
 int trigPin[] = {27,18};
 int echoPin[] = {26,19};
 
@@ -39,6 +43,9 @@ void setup() {
   pinMode(trigPin[m], OUTPUT); 
   pinMode(echoPin[m], INPUT);
   }
+
+  pinMode(pirPin, INPUT);    // initialize pirPin as an input
+  
   // Connect to WiFi network
   Serial.println();
   Serial.println();
@@ -69,9 +76,10 @@ void setup() {
 
 void loop() {
     sensorRead();
+    pirSense();
     sendOSC(float(distance[0]), "/area1/touch1/");
     sendOSC(float(distance[1]), "/area1/touch2/");
-    sendOSC(touchRead(T2), "/area1/touch3/");
+    sendOSC(pirStatus, "/area1/touch3/");
     sendOSC(touchRead(T5), "/area1/touch4/");
 
     oscRead();
@@ -169,4 +177,25 @@ void oscRead() {
     }
   }
 
+}
+
+void pirSense() {
+  pirStatus = digitalRead(pirPin);   // read pirPin pirStatusue
+  Serial.println(pirStatus);
+  if (pirStatus == HIGH) {           // check if the pirPin is HIGH
+    // delay(500);                // delay 100 milliseconds 
+    
+    if (presence == LOW) {
+      Serial.println("Motion detected!"); 
+      presence = HIGH;       // update variable presence to HIGH
+    }
+  } 
+  else {
+      // delay(500);             // delay 200 milliseconds 
+      
+      if (presence == HIGH){
+        Serial.println("Motion stopped!");
+        presence = LOW;       // update variable presence to LOW
+    }
+  }
 }
